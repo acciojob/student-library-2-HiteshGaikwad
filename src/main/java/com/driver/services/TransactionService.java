@@ -1,5 +1,7 @@
 package com.driver.services;
 
+import com.driver.models.Book;
+import com.driver.models.Card;
 import com.driver.models.Transaction;
 import com.driver.models.TransactionStatus;
 import com.driver.repositories.BookRepository;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,7 +48,38 @@ public class TransactionService {
 
         //Note that the error message should match exactly in all cases
 
-       return null; //return transactionId instead
+        try{
+        cardRepository5.existsById(cardId);
+        }
+        catch(Exception e){
+            return "Card is invalid";
+        }
+        try {
+            bookRepository5.existsById(bookId);
+        }catch(Exception e) {
+            return "Book is either unavailable or not present";
+        }
+            Card card = cardRepository5.findById(cardId).get();
+            int total=card.getBooks().size();
+            int max=max_allowed_books;
+             try{
+                 if(total<max){
+                 }
+        } catch(Exception e){
+                 return "Book limit has reached for this card";
+             }
+             Transaction transaction=new Transaction();
+        Book book= bookRepository5.findById(bookId).get();
+        List<Book> list= new ArrayList<>();
+        list.add(book);
+        transaction.setBook(book);
+        card.setBooks(list);
+        transaction.setCard(card);
+        transaction.setFineAmount(100);
+        transaction.setIssueOperation(true);
+        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+             transactionRepository5.save(transaction);
+       return transaction.getTransactionId();//return transactionId instead
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
@@ -57,7 +91,15 @@ public class TransactionService {
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well
 
-        Transaction returnBookTransaction  = null;
+        Book book= bookRepository5.findById(bookId).get();
+        book.setAvailable(true);
+        Card card= cardRepository5.findById(cardId).get();
+        transactions.remove(transaction);
+        transactionRepository5.delete(transaction);
+        transaction.getFineAmount();
+        transaction.setIssueOperation(false);
+
+        Transaction returnBookTransaction  = transaction;
         return returnBookTransaction; //return the transaction after updating all details
     }
 }

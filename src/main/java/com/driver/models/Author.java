@@ -1,22 +1,27 @@
 package com.driver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Data
+@Table(name="author")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
 
     @Column(unique = true)
     private String email;
 
     private int age;
+
     private String country;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
