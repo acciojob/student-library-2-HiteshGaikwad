@@ -1,9 +1,6 @@
 package com.driver.services;
 
-import com.driver.models.Book;
-import com.driver.models.Card;
-import com.driver.models.Transaction;
-import com.driver.models.TransactionStatus;
+import com.driver.models.*;
 import com.driver.repositories.BookRepository;
 import com.driver.repositories.CardRepository;
 import com.driver.repositories.TransactionRepository;
@@ -60,6 +57,7 @@ public class TransactionService {
             return "Book is either unavailable or not present";
         }
             Card card = cardRepository5.findById(cardId).get();
+        //card.setCardStatus(CardStatus.ACTIVATED);
             int total=card.getBooks().size();
             int max=max_allowed_books;
              try{
@@ -74,6 +72,7 @@ public class TransactionService {
         list.add(book);
         transaction.setBook(book);
         card.setBooks(list);
+
         transaction.setCard(card);
         transaction.setFineAmount(100);
         transaction.setIssueOperation(true);
