@@ -46,17 +46,22 @@ public class TransactionService {
         //Note that the error message should match exactly in all cases
 
         try{
-        cardRepository5.existsById(cardId);
+        if(cardRepository5.existsById(cardId)){
         Card card= cardRepository5.findById(cardId).get();
-       if(card.getCardStatus() != CardStatus.ACTIVATED);
+       if(card.getCardStatus() == CardStatus.ACTIVATED) {
+       }
+       }
         }
         catch(Exception e){
             return "Card is invalid";
         }
         try {
-            bookRepository5.existsById(bookId);
-            Book book= bookRepository5.findById(bookId).get();
-            if(!book.isAvailable());
+            if(bookRepository5.existsById(bookId)) {
+                Book book = bookRepository5.findById(bookId).get();
+                if (book.isAvailable()){
+
+                }
+            }
         }catch(Exception e) {
             return "Book is either unavailable or not present";
         }
@@ -76,6 +81,7 @@ public class TransactionService {
         list.add(book);
         transaction.setBook(book);
         card.setBooks(list);
+        book.setAvailable(false);
 
         transaction.setCard(card);
         transaction.setFineAmount(100);
@@ -88,19 +94,26 @@ public class TransactionService {
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
         List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
-        Transaction transaction = transactions.get(transactions.size() - 1);
+        Book book= bookRepository5.findById(bookId).get();
+
+        Transaction transaction = book.getTransactions().get(bookId);
+                //transactions.get(transactions.size() - 1);
 
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well
 
-        Book book= bookRepository5.findById(bookId).get();
+
         book.setAvailable(true);
+
         Card card= cardRepository5.findById(cardId).get();
+
         transactions.remove(transaction);
         transactionRepository5.delete(transaction);
+
         transaction.getFineAmount();
         transaction.setIssueOperation(false);
+        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
         Transaction returnBookTransaction  = transaction;
         return returnBookTransaction; //return the transaction after updating all details
