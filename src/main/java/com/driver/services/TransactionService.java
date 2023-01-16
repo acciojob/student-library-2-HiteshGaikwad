@@ -47,12 +47,16 @@ public class TransactionService {
 
         try{
         cardRepository5.existsById(cardId);
+        Card card= cardRepository5.findById(cardId).get();
+       if(card.getCardStatus() != CardStatus.ACTIVATED);
         }
         catch(Exception e){
             return "Card is invalid";
         }
         try {
             bookRepository5.existsById(bookId);
+            Book book= bookRepository5.findById(bookId).get();
+            if(!book.isAvailable());
         }catch(Exception e) {
             return "Book is either unavailable or not present";
         }
