@@ -28,9 +28,14 @@ public class BookService {
 
         Author author=book.getAuthor();
 
-        List<Book> list= new ArrayList<>();
-               list= author.getBooksWritten();
+        List<Book> list=author.getBooksWritten();
+
+        if(list==null) {
+         list=new ArrayList<>();
+        }
+
         list.add(book);
+
         author.setBooksWritten(list);
 
         book.setAuthor(author);
