@@ -51,9 +51,10 @@ public class TransactionService {
         Book book = bookRepository5.findById(bookId).get();
 
         Transaction transaction=new Transaction();
+
         transaction.setBook(book);
         transaction.setCard(card);
-        transaction.setIssueOperation(true);
+
 
         if(book ==null || !book.isAvailable()){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
@@ -73,6 +74,7 @@ public class TransactionService {
             throw new Exception("Book limit has reached for this card");
         }
 
+        transaction.setIssueOperation(true);
         book.setCard(card);
         book.setAvailable(false);
         List<Book> bookList= card.getBooks();
