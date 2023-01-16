@@ -3,6 +3,7 @@ package com.driver.services;
 import com.driver.models.Card;
 import com.driver.models.CardStatus;
 import com.driver.models.Student;
+import com.driver.repositories.CardRepository;
 import com.driver.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class StudentService {
 
     @Autowired
     StudentRepository studentRepository4;
+
+    @Autowired
+    CardRepository cardRepository;
+
 
     public Student getDetailsByEmail(String email){
         Student student = studentRepository4.findByEmailId(email);
@@ -33,7 +38,8 @@ public class StudentService {
         Card card= cardService4.createAndReturn(student);
         card.setCardStatus(CardStatus.ACTIVATED);
         student.setCard(card);
-        studentRepository4.save(student);
+       // studentRepository4.save(student);
+        cardRepository.save(card);
     }
 
     public void updateStudent(Student student){

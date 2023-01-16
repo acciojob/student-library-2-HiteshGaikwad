@@ -19,7 +19,7 @@ public class CardService {
         Card card = new Card();
         card.setId(cardId);
         //link student with a new card
-        cardRepository3.save(card);
+        //cardRepository3.save(card);
         return card;
     }
 
