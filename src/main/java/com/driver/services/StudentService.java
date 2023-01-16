@@ -36,7 +36,6 @@ public class StudentService {
 
     public void createStudent(Student student){
         Card card= cardService4.createAndReturn(student);
-        card.setCardStatus(CardStatus.ACTIVATED);
         student.setCard(card);
        // studentRepository4.save(student);
         cardRepository.save(card);
