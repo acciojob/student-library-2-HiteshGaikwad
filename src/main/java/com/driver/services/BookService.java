@@ -26,34 +26,58 @@ public class BookService {
 
        // Author author= authorRepository.findById(authorId).get();
 
-        Author author=book.getAuthor();
+//        Author author=book.getAuthor();
+//
+//        List<Book> list=author.getBooksWritten();
+//
+//        if(list==null) {
+//         list=new ArrayList<>();
+//        }
+//
+//        list.add(book);
+//
+//        author.setBooksWritten(list);
+//
+//        book.setAuthor(author);
+//
+//        //authorRepository.save(author);
+//
+//        bookRepository2.save(book);
 
-        List<Book> list=author.getBooksWritten();
+        int authorId = book.getAuthor().getId();
 
-        if(list==null) {
-         list=new ArrayList<>();
-        }
+        Author author =  authorRepository.findById(authorId).get();
 
-        list.add(book);
+        //Update the bookList written by Author
+        author.getBooksWritten().add(book);
 
-        author.setBooksWritten(list);
-
+        //Updated the book
         book.setAuthor(author);
-
-        //authorRepository.save(author);
-
+        //bookRepository2.save(book);
         bookRepository2.save(book);
+
+        authorRepository.save(author);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
 
         //find the elements of the list by yourself
-        if(genre!=null && author!=null) {
-           return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        }else if(author!=null){
-            return bookRepository2.findBooksByAuthor(author,available);
-        }else if(genre!=null){
-            return bookRepository2.findBooksByGenre(genre,available);
+//        if(genre!=null && author!=null) {
+//           return bookRepository2.findBooksByGenreAuthor(genre, author, available);
+//        }else if(author!=null){
+//            return bookRepository2.findBooksByAuthor(author,available);
+//        }else if(genre!=null){
+//            return bookRepository2.findBooksByGenre(genre,available);
+//        }else{
+//            return bookRepository2.findByAvailability(available);
+//        }
+
+        if(genre != null && author != null){
+            return bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        }else if(genre != null){
+            return bookRepository2.findBooksByGenre(genre, available);
+        }else if(author != null){
+            return bookRepository2.findBooksByAuthor(author, available);
         }else{
             return bookRepository2.findByAvailability(available);
         }

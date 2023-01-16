@@ -61,13 +61,13 @@ public class TransactionService {
             throw new Exception("Book is either unavailable or not present");
         }
 
-        if(card==null || card.getCardStatus().equals(CardStatus.DEACTIVATED)){
+        else if(card==null || card.getCardStatus()!=CardStatus.ACTIVATED){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Card is invalid");
         }
 
-        if(card.getBooks().size()>=max_allowed_books){
+        else if(card.getBooks().size()>=max_allowed_books){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Book limit has reached for this card");
@@ -86,6 +86,7 @@ public class TransactionService {
 
        return transaction.getTransactionId();//return transactionId instead
     }
+
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
