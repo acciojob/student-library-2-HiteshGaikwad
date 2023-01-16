@@ -55,10 +55,10 @@ public class BookService {
         if(genre != null && author != null){
             bookList= bookRepository2.findBooksByGenreAuthor(genre, author, available);
             return bookList;
-        }else if(genre != null && author==null){
+        }else if(author==null){
             bookList= bookRepository2.findBooksByGenre(genre, available);
             return bookList;
-        }else if(author != null && genre==null){
+        }else if(genre==null){
             bookList= bookRepository2.findBooksByAuthor(author, available);
             return bookList;
         }else{
