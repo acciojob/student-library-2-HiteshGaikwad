@@ -56,7 +56,7 @@ public class BookService {
         //bookRepository2.save(book);
         bookRepository2.save(book);
 
-        authorRepository.save(author);
+        //authorRepository.save(author);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
