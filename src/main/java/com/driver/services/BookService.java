@@ -50,19 +50,30 @@ public class BookService {
 
         //find the elements of the list by yourself
 
-        List<Book> bookList=new ArrayList<>();
-
+        //List<Book> bookList=new ArrayList<>();
         if(genre != null && author != null){
-            bookList= bookRepository2.findBooksByGenreAuthor(genre, author, available);
+            List<Book> bookList = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
             return bookList;
         }else if(author==null){
-            bookList= bookRepository2.findBooksByGenre(genre, available);
+            List<Book> bookList= bookRepository2.findBooksByGenre(genre, available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
             return bookList;
         }else if(genre==null){
-            bookList= bookRepository2.findBooksByAuthor(author, available);
+            List<Book> bookList= bookRepository2.findBooksByAuthor(author, available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
             return bookList;
         }else{
-            bookList= bookRepository2.findByAvailability(available);
+            List<Book> bookList= bookRepository2.findByAvailability(available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
             return bookList;
         }
     }
