@@ -16,10 +16,8 @@ public class BookService {
 
 
     @Autowired
-    BookRepository bookRepository2;
+    BookRepository bookRepository;
 
-    @Autowired
-    AuthorRepository authorRepository;
 
     public void createBook(Book book){
        // int authorId=book.getAuthor().getId();
@@ -42,7 +40,7 @@ public class BookService {
 
         //authorRepository.save(author);
 
-        bookRepository2.save(book);
+        bookRepository.save(book);
 
     }
 
@@ -51,30 +49,42 @@ public class BookService {
         //find the elements of the list by yourself
 
         //List<Book> bookList=new ArrayList<>();
-        if(genre != null && author != null){
-            List<Book> bookList = bookRepository2.findBooksByGenreAuthor(genre, author, available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        }else if(author==null){
-            List<Book> bookList= bookRepository2.findBooksByGenre(genre, available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        }else if(genre==null){
-            List<Book> bookList= bookRepository2.findBooksByAuthor(author, available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        }else{
-            List<Book> bookList= bookRepository2.findByAvailability(available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
+//        if(genre != null && author != null){
+//            List<Book> bookList = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+//            if(bookList==null){
+//                bookList=new ArrayList<>();
+//            }
+//            return bookList;
+//        }else if(author==null){
+//            List<Book> bookList= bookRepository2.findBooksByGenre(genre, available);
+//            if(bookList==null){
+//                bookList=new ArrayList<>();
+//            }
+//            return bookList;
+//        }else if(genre==null){
+//            List<Book> bookList= bookRepository2.findBooksByAuthor(author, available);
+//            if(bookList==null){
+//                bookList=new ArrayList<>();
+//            }
+//            return bookList;
+//        }else{
+//            List<Book> bookList= bookRepository2.findByAvailability(available);
+//            if(bookList==null){
+//                bookList=new ArrayList<>();
+//            }
+//            return bookList;
+//        }
+
+        if(genre!=null && author!=null){
+            return bookRepository.findBooksByGenreAuthor(genre,author,available);
+        } else if(genre!=null){
+            return bookRepository.findBooksByGenre(genre,available);
+        }
+        else if(author!=null){
+            return  bookRepository.findBooksByAuthor(author,available);
+        }
+        else {
+            return bookRepository.findByAvailability(available);
         }
     }
 
