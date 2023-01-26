@@ -76,15 +76,31 @@ public class BookService {
 //        }
 
         if(genre!=null && author!=null){
-            return bookRepository.findBooksByGenreAuthor(genre,author,available);
+            List<Book> bookList= bookRepository.findBooksByGenreAuthor(genre,author,available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
+            return bookList;
         } else if(genre!=null){
-            return bookRepository.findBooksByGenre(genre,available);
+            List<Book> bookList= bookRepository.findBooksByGenre(genre,available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
+            return bookList;
         }
         else if(author!=null){
-            return  bookRepository.findBooksByAuthor(author,available);
+            List<Book> bookList=  bookRepository.findBooksByAuthor(author,available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
+            return bookList;
         }
         else {
-            return bookRepository.findByAvailability(available);
+            List<Book> bookList= bookRepository.findByAvailability(available);
+            if(bookList==null){
+                bookList=new ArrayList<>();
+            }
+            return bookList;
         }
     }
 
