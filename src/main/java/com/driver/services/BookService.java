@@ -20,26 +20,6 @@ public class BookService {
 
 
     public void createBook(Book book){
-       // int authorId=book.getAuthor().getId();
-
-       // Author author= authorRepository.findById(authorId).get();
-
-        Author author=book.getAuthor();
-
-        List<Book> list=author.getBooksWritten();
-
-        if(list==null) {
-         list=new ArrayList<>();
-        }
-
-        list.add(book);
-
-        author.setBooksWritten(list);
-
-        book.setAuthor(author);
-
-        //authorRepository.save(author);
-
         bookRepository.save(book);
 
     }
@@ -47,34 +27,6 @@ public class BookService {
     public List<Book> getBooks(String genre, boolean available, String author){
 
         //find the elements of the list by yourself
-
-        //List<Book> bookList=new ArrayList<>();
-//        if(genre != null && author != null){
-//            List<Book> bookList = bookRepository2.findBooksByGenreAuthor(genre, author, available);
-//            if(bookList==null){
-//                bookList=new ArrayList<>();
-//            }
-//            return bookList;
-//        }else if(author==null){
-//            List<Book> bookList= bookRepository2.findBooksByGenre(genre, available);
-//            if(bookList==null){
-//                bookList=new ArrayList<>();
-//            }
-//            return bookList;
-//        }else if(genre==null){
-//            List<Book> bookList= bookRepository2.findBooksByAuthor(author, available);
-//            if(bookList==null){
-//                bookList=new ArrayList<>();
-//            }
-//            return bookList;
-//        }else{
-//            List<Book> bookList= bookRepository2.findByAvailability(available);
-//            if(bookList==null){
-//                bookList=new ArrayList<>();
-//            }
-//            return bookList;
-//        }
-
         if(genre!=null && author!=null){
             List<Book> bookList= bookRepository.findBooksByGenreAuthor(genre,author,available);
             if(bookList==null){
