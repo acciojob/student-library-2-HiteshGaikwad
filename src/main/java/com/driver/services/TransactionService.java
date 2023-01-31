@@ -100,15 +100,18 @@ public class TransactionService {
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
-        List<Transaction> transactions = transactionRepository.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
+        //List<Transaction> transactions = transactionRepository.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
 
-        Transaction transaction = transactions.get(transactions.size() - 1);
+       // Transaction transaction = transactions.get(transactions.size() - 1);
 
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well
+        List<Transaction> transactions = transactionRepository.find(cardId, bookId,TransactionStatus.SUCCESSFUL, true);
 
-        Date issueDate= transaction.getTransactionDate();
+        Transaction transaction = transactions.get(transactions.size() - 1);
+
+        Date issueDate = transaction.getTransactionDate();
 
         long timeIssuetime = Math.abs(System.currentTimeMillis() - issueDate.getTime());
 
@@ -119,25 +122,22 @@ public class TransactionService {
             fine = (int)((no_of_days_passed - getMax_allowed_days) * fine_per_day);
         }
 
-        Book book= transaction.getBook();
+        Book book = transaction.getBook();
 
         book.setAvailable(true);
         book.setCard(null);
 
         bookRepository.updateBook(book);
 
-        Transaction transaction1=new Transaction();
+        Transaction tr = new Transaction();
+        tr.setBook(transaction.getBook());
+        tr.setCard(transaction.getCard());
+        tr.setIssueOperation(false);
+        tr.setFineAmount(fine);
+        tr.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
-        transaction1.setIssueOperation(false);
-        transaction1.setFineAmount(fine);
-        transaction1.setBook(transaction.getBook());
-        transaction.setCard(transaction.getCard());
-        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+        transactionRepository.save(tr);
 
-        transactionRepository.save(transaction1);
-
-
-        Transaction returnBookTransaction  = transaction1;
-        return returnBookTransaction; //return the transaction after updating all details
+        return tr;
     }
 }
