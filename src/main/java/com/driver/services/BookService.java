@@ -21,38 +21,17 @@ public class BookService {
 
     public void createBook(Book book){
         bookRepository.save(book);
-
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
-
-        //find the elements of the list by yourself
-        if(genre!=null && author!=null){
-            List<Book> bookList= bookRepository.findBooksByGenreAuthor(genre,author,available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        } else if(genre!=null){
-            List<Book> bookList= bookRepository.findBooksByGenre(genre,available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        }
-        else if(author!=null){
-            List<Book> bookList=  bookRepository.findBooksByAuthor(author,available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
-        }
-        else {
-            List<Book> bookList= bookRepository.findByAvailability(available);
-            if(bookList==null){
-                bookList=new ArrayList<>();
-            }
-            return bookList;
+        if(genre != null && author != null){
+            return bookRepository.findBooksByGenreAuthor(genre, author, available);
+        }else if(genre != null){
+            return bookRepository.findBooksByGenre(genre, available);
+        }else if(author != null){
+            return bookRepository.findBooksByAuthor(author, available);
+        }else{
+            return bookRepository.findByAvailability(available);
         }
     }
 

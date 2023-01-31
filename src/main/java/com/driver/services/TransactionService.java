@@ -17,13 +17,13 @@ import java.util.concurrent.TimeUnit;
 public class TransactionService {
 
     @Autowired
-    BookRepository bookRepository5;
+    BookRepository bookRepository;
 
     @Autowired
-    CardRepository cardRepository5;
+    CardRepository cardRepository;
 
     @Autowired
-    TransactionRepository transactionRepository5;
+    TransactionRepository transactionRepository;
 
     @Value("${books.max_allowed}")
     public int max_allowed_books;
@@ -47,52 +47,60 @@ public class TransactionService {
 
         //Note that the error message should match exactly in all cases
 
-        Card card= cardRepository5.findById(cardId).get();
-        Book book = bookRepository5.findById(bookId).get();
+        Book book = bookRepository.findById(bookId).get();
+        Card card = cardRepository.findById(cardId).get();
 
-        Transaction transaction=new Transaction();
+        Transaction transaction = new Transaction();
 
         transaction.setBook(book);
         transaction.setCard(card);
+        transaction.setIssueOperation(true);
 
-
-        if(book ==null || !book.isAvailable()){
+        //Book should be available
+        if(book == null || !book.isAvailable()){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
-            transactionRepository5.save(transaction);
+            transactionRepository.save(transaction);
             throw new Exception("Book is either unavailable or not present");
         }
 
-        else if(card==null || card.getCardStatus()!=CardStatus.ACTIVATED){
+        //Card is unavaible or its deactivated
+        if(card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
-            transactionRepository5.save(transaction);
+            transactionRepository.save(transaction);
             throw new Exception("Card is invalid");
         }
 
-        else if(card.getBooks().size()>=max_allowed_books){
+        if(card.getBooks().size() >= max_allowed_books){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
-            transactionRepository5.save(transaction);
+            transactionRepository.save(transaction);
             throw new Exception("Book limit has reached for this card");
         }
 
-        transaction.setIssueOperation(true);
         book.setCard(card);
         book.setAvailable(false);
-        List<Book> bookList= card.getBooks();
+        List<Book> bookList = card.getBooks();
         bookList.add(book);
         card.setBooks(bookList);
 
-        bookRepository5.updateBook(book);
+        cardRepository.save(card);
+
+        bookRepository.updateBook(book);
 
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-        transactionRepository5.save(transaction);
 
-       return transaction.getTransactionId();//return transactionId instead
+        transactionRepository.save(transaction);
+        //This saving of transcation can't be avoided bcz card is not bidirectionally connected to txn
+        //and for the book we are not calling the inbuilt .save function
+
+
+
+        return transaction.getTransactionId();
     }
 
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
-        List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
+        List<Transaction> transactions = transactionRepository.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
 
         Transaction transaction = transactions.get(transactions.size() - 1);
 
@@ -116,7 +124,7 @@ public class TransactionService {
         book.setAvailable(true);
         book.setCard(null);
 
-        bookRepository5.updateBook(book);
+        bookRepository.updateBook(book);
 
         Transaction transaction1=new Transaction();
 
@@ -126,7 +134,7 @@ public class TransactionService {
         transaction.setCard(transaction.getCard());
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
-        transactionRepository5.save(transaction1);
+        transactionRepository.save(transaction1);
 
 
         Transaction returnBookTransaction  = transaction1;
