@@ -45,6 +45,7 @@ public class Book {
         this.name = name;
         this.genre = genre;
         this.author = author;
+        this.available=true;
     }
 
     public int getId() {

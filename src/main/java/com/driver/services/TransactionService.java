@@ -50,7 +50,7 @@ public class TransactionService {
         try{
             cardRepository5.existsById(cardId);
             Card card= cardRepository5.findById(cardId).get();
-            if(card.getCardStatus() != CardStatus.ACTIVATED);
+            if(card.getCardStatus() == CardStatus.DEACTIVATED);
         }
         catch(Exception e){
             return "Card is invalid";
