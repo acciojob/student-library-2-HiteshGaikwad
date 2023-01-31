@@ -16,42 +16,43 @@ public class BookService {
 
 
     @Autowired
-    BookRepository bookRepository;
+    BookRepository bookRepository2;
 
     @Autowired
     AuthorRepository authorRepository;
 
 
     public void createBook(Book book){
-        try
-        {
-            int authorId = book.getAuthor().getId();
-            Author author = authorRepository.findById(authorId).get();
-            List<Book> bookList = author.getBooksWritten();
-            if(bookList==null) {
-                bookList = new ArrayList<>();
-            }
-            bookList.add(book);
-            book.setAuthor(author);
-            author.setBooksWritten(bookList);
-            authorRepository.save(author);
+        Author author=book.getAuthor();
+
+        List<Book> list=author.getBooksWritten();
+
+        if(list==null) {
+            list=new ArrayList<>();
         }
-        catch(Exception e) {
-            bookRepository.save(book);
-        }
+
+        list.add(book);
+
+        author.setBooksWritten(list);
+
+        book.setAuthor(author);
+
+        //authorRepository.save(author);
+
+        bookRepository2.save(book);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
         List<Book> books;
 
         if(genre != null && author != null){
-            books = bookRepository.findBooksByGenreAuthor(genre, author, available);
+            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
         }else if(genre != null){
-            books = bookRepository.findBooksByGenre(genre, available);
+            books = bookRepository2.findBooksByGenre(genre, available);
         }else if(author != null){
-            books = bookRepository.findBooksByAuthor(author, available);
+            books = bookRepository2.findBooksByAuthor(author, available);
         }else{
-            books = bookRepository.findByAvailability(available);
+            books = bookRepository2.findByAvailability(available);
         }
         if(books==null){
             books=new ArrayList<>();
