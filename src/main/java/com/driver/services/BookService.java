@@ -53,6 +53,9 @@ public class BookService {
         }else{
             books = bookRepository.findByAvailability(available);
         }
+        if(books==null){
+            books=new ArrayList<>();
+        }
         return books;
     }
 
